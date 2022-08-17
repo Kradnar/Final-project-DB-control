@@ -59,7 +59,7 @@ exports.updateUser = async (req, res) => {
     }
     //--------------------------------------------------------------------------
     else if (req.body.newEmail) {
-      const user = await User.findOne({email: req.body.username})
+      const user = await User.findOne({username: req.body.username})
       let oldName = req.body.username
       let newEmail = req.body.newEmail
       console.log(`Changing ${oldName}'s email address to ${newEmail}`)
