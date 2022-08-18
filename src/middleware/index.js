@@ -82,9 +82,9 @@ exports.updatePass = async (req, res, next) => {
       else {    
         console.log("Comparing entered Password with stored Password...")
         req.user = await User.findOne({ username: req.body.username})
-        console.log(req.body.password);
-        console.log(req.user.password);
-        console.log(await bcrypt.compare(req.body.password, req.user.password))
+        // console.log(req.body.password);
+        // console.log(req.user.password);
+        // console.log(await bcrypt.compare(req.body.password, req.user.password))
         //--------------------------------------
         if (req.user && (await bcrypt.compare(req.body.password, req.user.password))) {
           console.log("hashing New Password...")
