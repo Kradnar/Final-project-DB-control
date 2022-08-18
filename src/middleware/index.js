@@ -1,14 +1,14 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../user/model");
-//------------------------------------------------------------------------------------------------------------
+//----------------------------------------------------------------------------------
 exports.hashPass = async (req, res, next) => {
   try {
     if (!req.body.password) {
       console.log("Skipping Hash...")
       next()
     }
-//--------------------------------------    
+    //--------------------------------------    
     else {
     console.log("hashing Password...")
     //take a password out of the body, hash that password with bcrypt, and then put it back in the body
@@ -22,7 +22,7 @@ exports.hashPass = async (req, res, next) => {
     next()
     }// moves onto next parameter
   } 
-//--------------------------------------
+  //--------------------------------------
   catch (error) {
     console.log(error);
     res.status(418).send({ err: error });
@@ -35,28 +35,18 @@ exports.comparePass = async (req, res, next) => {
       console.log("Skipping Compare...")
       next()
     }
-//--------------------------------------
+    //--------------------------------------
     else {
     console.log("Comparing entered Password with stored Password...")
-    //? Version 1
-    // const user = await User.findOne({ username: req.body.username });
-    // const matched = await bcrypt.compare(req.body.password, user.password);
-    // if (matched) {
-    //   next();
-    // } 
-    // else {
-    //   throw new Error()
-    // }
-    //? Version 2
     req.user = await User.findOne({ username: req.body.username})
     console.log(req.body.password);
     console.log(req.user.password);
     console.log(await bcrypt.compare(req.body.password, req.user.password))
-//--------------------------------------    
+    //--------------------------------------    
     if (req.user && (await bcrypt.compare(req.body.password, req.user.password))) {
     next()
     }
-//--------------------------------------
+    //--------------------------------------
     else {
       throw new Error("Incorrect Credentials")
     }
@@ -64,13 +54,13 @@ exports.comparePass = async (req, res, next) => {
     //if successful pass user to controller through req, if unsuccessful send error
     }
   }
-//--------------------------------------  
+  //--------------------------------------  
   catch (error) {
     console.log(error);
     res.status(418).send({ error: error.message })
   }
 };
-//------------------------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------------
 exports.updatePass = async (req, res, next) => {
   console.log("running updatePass")
     try {
@@ -108,6 +98,7 @@ exports.updatePass = async (req, res, next) => {
     }
   }
 //------------------------------------------------------------------------------------------------------------
+
 exports.tokenCheck = async (req, res, next) => {
   try {
     console.log("Checking Token...");
@@ -116,9 +107,10 @@ exports.tokenCheck = async (req, res, next) => {
     const user = await User.findById(decodedToken._id);
     req.user = user;
     next();
-    //get the token from req, unlock the token, find the user with the id in the token, send the user to a controller
+    //get the token from req, unlock the token, find the user with 
+    //the id in the token, send the user to a controller
   } 
-//--------------------------------------  
+//----------------------------------------------  
   catch (error) {
     console.log(error);
     res.status(418).send({ err: error })

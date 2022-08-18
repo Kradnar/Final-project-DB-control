@@ -46,6 +46,48 @@ exports.getAllUsers = async (req, res) => {
   }
 };
 //------------------------------------------------------------------------------------------------------------
+
+exports.updateUser = async (req, res) => {
+    try {                                                         
+    console.log(req.body)            //? <----             to check how data is being sent
+    if (req.body.newUsername) {
+      const user = await User.findOne({username: req.body.username})
+      let oldName = req.body.username
+      let newName = req.body.newUsername
+      console.log(`Changing ${oldName} to ${newName}`)
+      await User.updateOne({username: user.username}, {$set: {username: req.body.newUsername}});
+      res.send({ msg: "Username Updated"})
+    }
+    //--------------------------------------------------------------------------
+    else if (req.body.newEmail) {
+      const user = await User.findOne({username: req.body.username})
+      let oldName = req.body.username
+      let newEmail = req.body.newEmail
+      console.log(`Changing ${oldName}'s email address to ${newEmail}`)
+      await User.updateOne({email: user.email}, {$set: {email: req.body.newEmail}});
+      res.send({ msg: "E-Mail Updated"})
+    }
+    //--------------------------------------------------------------------------
+    else if (req.body.newPassword) {
+      const user = await User.findOne({username: req.body.username})
+      let oldPass = req.body.password
+      let newPass = req.body.newPassword
+      console.log(`Updating Password`)
+      await User.updateOne({password: user.password}, {$set: {password: req.body.newPassword}})
+      res.send({ msg: "Password Updated"})
+    }
+    //---------------------------------------------------------------------------
+    else {
+      console.log("Else condition reached")
+      throw new Error("No newUpdate field detected")
+    }
+  }  
+  catch (error) {
+    console.log(error)
+    res.status(418).send({ error: error.message })
+  }
+}
+//------------------------------------------------------------------------------------------------------------
 exports.deleteUser = async (req, res) => {
   try {
   console.log("Deleting a user...");
