@@ -46,78 +46,6 @@ exports.getAllUsers = async (req, res) => {
   }
 };
 //------------------------------------------------------------------------------------------------------------
-exports.updateUser = async (req, res) => {
-  try {
-    console.log(req.body.params)                            //! params added to work with front-end
-    if (req.body.params.newUsername) {
-      const user = await User.findOne({username: req.body.params.username})
-      let oldName = req.body.params.username
-      let newName = req.body.params.newUsername
-      console.log(`Changing ${oldName} to ${newName}`)
-      await User.updateOne({username: user.username}, {$set: {username: req.body.params.newUsername}});
-      res.send({ msg: "Username Updated"})
-    }
-//--------------------------------------     
-    else if (req.body.params.newEmail) {
-      const user = await User.findOne({username: req.body.params.username})
-      let oldName = req.body.params.username
-      let newEmail = req.body.params.newEmail
-      console.log({User})
-      console.log(`Changing ${oldName}'s email address to ${newEmail}`)
-      await User.updateOne({email: user.email}, {$set: {email: req.body.params.newEmail}});
-      res.send({ msg: "E-Mail Updated"})
-    }
-//--------------------------------------     
-    else if (req.body.params.newPassword) {
-      const user = await User.findOne({username: req.body.params.username})
-      let oldPass = req.body.params.password
-      let newPass = req.body.params.newPassword
-      console.log(`Updating Password`)
-      await User.updateOne({password: user.password}, {$set: {password: req.body.params.newPassword}})
-      res.send({ msg: "Password Updated"})
-    }
-//--------------------------------------     
-    else {
-      console.log("Else condition reached")
-      throw new Error("No newUpdate field detected")
-    }
- }                                                                   //! no params
-    // console.log(req.body)
-    // if (req.body.newUsername) {
-    //   const user = await User.findOne({username: req.body.username})
-    //   let oldName = req.body.username
-    //   let newName = req.body.newUsername
-    //   console.log(`Changing ${oldName} to ${newName}`)
-    //   await User.updateOne({username: user.username}, {$set: {username: req.body.newUsername}});
-    //   res.send({ msg: "Username Updated"})
-    // }
-    // else if (req.body.newEmail) {
-    //   const user = await User.findOne({email: req.body.username})
-    //   let oldEmail = req.body.email
-    //   let newEmail = req.body.newEmail
-    //   console.log(`Changing ${oldEmail} to ${newEmail}`)
-    //   await User.updateOne({email: user.email}, {$set: {email: req.body.newEmail}});
-    //   res.send({ msg: "E-Mail Updated"})
-    // }
-    // else if (req.body.newPassword) {
-    //   const user = await User.findOne({username: req.body.username})
-    //   let oldPass = req.body.password
-    //   let newPass = req.body.newPassword
-    //   console.log(`Updating Password`)
-    //   await User.updateOne({password: user.password}, {$set: {password: req.body.newPassword}})
-    //   res.send({ msg: "Password Updated"})
-    // }
-    // else {
-    //   console.log("Else condition reached")
-    //   throw new Error("No newUpdate field detected")
-    // }
-//-------------------------------------- 
-  catch (error) {
-    console.log(error)
-    res.status(418).send({ error: error.message })
-  }
-}
-//------------------------------------------------------------------------------------------------------------
 exports.deleteUser = async (req, res) => {
   try {
   console.log("Deleting a user...");
@@ -131,3 +59,58 @@ catch (error) {
 }
 }
 //------------------------------------------------------------------------------------------------------------
+exports.updateUser = async (req, res) => {
+  try {                              
+  if (!req.body.newPassword){                     
+  console.log(req.body)            //? <----             to check how data is being sent
+    const user = await User.findOne({username: req.body.username})
+    // Finds username
+    //-------------------------------------- 
+    if (req.body.newUsername) {
+      // If there is a new-something in the body, it'll update. If not, it will ignore it
+      await User.updateOne({username: user.username}, {$set: {username: req.body.newUsername}});
+      console.log("AA")
+    }
+    else{
+      console.log("A")
+    }
+    //-------------------------------------- 
+    if (req.body.newEmail) {
+      await User.updateOne({email: user.email}, {$set: {email: req.body.newEmail}});
+      console.log("BB")
+    }
+    else{
+      console.log("B")
+    }
+    res.send({ msg: "User fields updated" })
+  }
+  else{
+    console.log("No update fields found")
+  }
+}
+//-------------------------------------- 
+catch (error) {
+  console.log(error)
+  res.status(418).send({ error: error.message })
+}
+}
+//------------------------------------------------------------------------------------------------------------
+exports.updatePass2 = async (req, res) => {
+  try {                                                        
+    if (req.body.newPassword){ 
+      // This is seoerate as it'll need to hash
+  console.log(req.body)            //? <----             to check how data is being sent
+  const user = await User.findOne({username: req.body.username})
+  await User.updateOne({username: user.password}, {$set: {password: req.body.newPassword}});
+  res.send({ msg: "User fields updated" })
+  {console.log("Updated password")}
+    }
+    else
+    {console.log("Not updated")}
+}
+//--------------------------------------
+catch (error) {
+  console.log(error)
+  res.status(418).send({ error: error.message })
+}
+}
