@@ -62,42 +62,43 @@ exports.comparePass = async (req, res, next) => {
 };
 //------------------------------------------------------------------------------------
 exports.updatePass = async (req, res, next) => {
-console.log("running updatePass")
-  try {
-    if (!req.body.newPassword) {
-      console.log("Skipping Update Password...")
-      next()
-    }
-    //----------------------------------------------------------------------
-    else {    
-      console.log("Comparing entered Password with stored Password...")
-      req.user = await User.findOne({ username: req.body.username})
-      console.log(req.body.password);
-      console.log(req.user.password);
-      console.log(await bcrypt.compare(req.body.password, req.user.password))
-      //----------------------------------------------------------------------------
-      if (req.user && (await bcrypt.compare(req.body.password, req.user.password))) {
-        console.log("hashing New Password...")
-        const newPass = req.body.newPassword;             //grab value
-        console.log(newPass)
-        console.log("is now Hashed as...")
-        const newHashedPass = await bcrypt.hash(newPass, 8); //hash value
-        console.log(newHashedPass)
-        req.body.newPassword = newHashedPass;             //re-store value
+  console.log("running updatePass")
+    try {
+      if (!req.body.newPassword) {
+        console.log("Skipping Update Password...")
         next()
       }
-      //----------------------------------------------------------------------------
-      else {
-        throw new Error("Incorrect Credentials")
+      //--------------------------------------
+      else {    
+        console.log("Comparing entered Password with stored Password...")
+        req.user = await User.findOne({ username: req.body.username})
+        // console.log(req.body.password);
+        // console.log(req.user.password);
+        // console.log(await bcrypt.compare(req.body.password, req.user.password))
+        //--------------------------------------
+        if (req.user && (await bcrypt.compare(req.body.password, req.user.password))) {
+          console.log("hashing New Password...")
+          const newPass = req.body.newPassword;             //grab value
+          console.log(newPass)
+          console.log("is now Hashed as...")
+          const newHashedPass = await bcrypt.hash(newPass, 8); //hash value
+          console.log(newHashedPass)
+          req.body.newPassword = newHashedPass;             //re-store value
+          next()
+        }
+        //--------------------------------------
+        else {
+          throw new Error("Incorrect Credentials")
+        }
       }
+    //--------------------------------------
+    } catch (error) {
+      console.log(error);
+      res.status(418).send({ error: error.message });
     }
-  //------------------------------------------------------------------------
-  } catch (error) {
-    console.log(error);
-    res.status(418).send({ error: error.message });
   }
-}
-//-----------------------------------------------------------------------------------
+//------------------------------------------------------------------------------------------------------------
+
 exports.tokenCheck = async (req, res, next) => {
   try {
     console.log("Checking Token...");
