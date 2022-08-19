@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken")
 const User = require("./model");
-//------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------------------
 exports.createUser = async (req, res) => {
   try {
     console.log("Creating User...")
@@ -14,7 +14,7 @@ exports.createUser = async (req, res) => {
     res.status(418).send({ err: error });
   }
 };
-//------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------------------
 exports.login = async (req, res) => {
   try {
     console.log("Logging In...")
@@ -27,7 +27,7 @@ exports.login = async (req, res) => {
     res.status(418).send({ err: error });
   }
 };
-//------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------------------
 exports.getAllUsers = async (req, res) => {
   try {
     console.log("Getting list of Users...")
@@ -45,11 +45,11 @@ exports.getAllUsers = async (req, res) => {
     res.status(418).send({ err: error });
   }
 };
-//------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------------------
 
 exports.updateUser = async (req, res) => {
     try {                                                         
-    console.log(req.body)            //? <----             to check how data is being sent
+    console.log(req.body)            //?      <----      to check how data is being sent
     if (req.body.newUsername) {
       const user = await User.findOne({username: req.body.username})
       let oldName = req.body.username
@@ -87,65 +87,63 @@ exports.updateUser = async (req, res) => {
     res.status(418).send({ error: error.message })
   }
 }
-//------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------------------
 exports.deleteUser = async (req, res) => {
   try {
   console.log("Deleting a user...");
   await User.deleteOne({ username: req.body.username })
   res.send({ msg: "This came from deleteUser" });
+  }
+  //-------------------------------------- 
+  catch (error) {
+    console.log(error);
+    res.status(418).send({ err: error });
+  }
 }
-//-------------------------------------- 
-catch (error) {
-  console.log(error);
-  res.status(418).send({ err: error });
-}
-}
-//------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------------------
 exports.updateUser = async (req, res) => {
-  try {                              
-  // if (!req.body.newPassword){               
-    // if (req.body.username){               
-  console.log(req.body)            //? <----             to check how data is being sent
+  try {                                            
+  console.log(req.body)            //?      <----        to check how data is being sent
     const user = await User.findOne({username: req.body.username})
     // Finds username
     //-------------------------------------- 
     if (req.body.newUsername) {
       // If there is a new-something in the body, it'll update. If not, it will ignore it
       await User.updateOne({username: user.username}, {$set: {username: req.body.newUsername}});
-      console.log("AA")
+      console.log("Username Updated")
     }
     else{
-      console.log("A")
+      console.log("Username NOT Updated")
     }
     //-------------------------------------- 
     if (req.body.newPassword) {
       await User.updateOne({password: user.password}, {$set: {password: req.body.newPassword}});
-      console.log("BB")
+      console.log("Password Updated")
     }
     else{
-      console.log("B")
+      console.log("Password NOT Updated")
     }
-      //-------------------------------------- 
+    //-------------------------------------- 
     
     if (req.body.newEmail) {
       await User.updateOne({email: user.email}, {$set: {email: req.body.newEmail}});
-      console.log("CC")
+      console.log("Email Updated")
     }
     else{
-      console.log("C")
+      console.log("Email NOT Updated")
     }
-    console.log("D")
+    console.log("Update User Ended")
     console.log(req.body)
-    res.send({ msg: "User fields"})
+    res.send({ msg: "User Update complete"})
     //-------------------------------------- 
   }
 //-------------------------------------- 
-catch (error) {
-  console.log(error)
-  res.status(418).send({ error: error.message })
+  catch (error) {
+    console.log(error)
+    res.status(418).send({ error: error.message })
+  }
 }
-}
-//------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------------------
 // exports.updatePass2 = async (req, res) => {
 //   try {                                                        
 //     if (req.body.newPassword){ 

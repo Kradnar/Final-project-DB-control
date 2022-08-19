@@ -8,7 +8,7 @@ const  bodyParser = require('body-parser');
 const port = process.env.PORT || 5001
 const app = express();
 
-//------------------------------------------------------------------------------------------------------------
+//!---------------------- Possible problems with hosting. -----------------------------
 app.use(bodyParser.json({
   limit: '50mb'
 }));
@@ -18,7 +18,7 @@ app.use(bodyParser.urlencoded({
   parameterLimit: 100000,
   extended: true 
 }));
-//Possible problems with hosting. This is liked to the body-parser
+//!------------------- This is likely to be the body-parser --------------------------
 //------------------------------------------------------------------------------------------------------------
 
 //add relevant routes and controllers to app before listen runs
