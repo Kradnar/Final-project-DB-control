@@ -17,8 +17,6 @@ exports.hashPass = async (req, res, next) => {
     const hashedPass = await bcrypt.hash(pass, 8); //hash value
     console.log(hashedPass)
     req.body.password = hashedPass; //re-store value
-    // 3 above lines (excluding console.logs) in ONE line
-    // req.body.password = await bcrypt.hash(req.body.password, 8); 
     next()
     }// moves onto next parameter
   } 
@@ -74,7 +72,6 @@ exports.updatePass = async (req, res, next) => {
         req.user = await User.findOne({ username: req.body.username})
         // console.log(req.body.password);
         // console.log(req.user.password);
-        // console.log(await bcrypt.compare(req.body.password, req.user.password))
         //--------------------------------------
         if (req.user && (await bcrypt.compare(req.body.password, req.user.password))) {
           console.log("hashing New Password...")
